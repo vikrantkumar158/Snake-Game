@@ -1,2 +1,6 @@
 Do you know what am I doing?
+<<<<<<< HEAD
 local
+=======
+cloud
+>>>>>>> 1a965bf7db84601ff4e5d4203a10b50b85a71de2
