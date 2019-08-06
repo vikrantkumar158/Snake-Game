@@ -1,0 +1,201 @@
+<!doctype html>
+<head>
+	<title></title>
+</head>
+<body onload='game()'>
+<canvas id="myCanvas" width="1000" height="500" style="border:1px solid #000000"></canvas>
+</body>
+<script type="text/javascript">
+var start=1;
+var x;
+var myCanvas=document.getElementById('myCanvas');
+var ctr=myCanvas.getContext("2d");
+ctr.fillStyle='#FF0000';
+function Food()
+{
+	var p1=0;
+	var p2=0;
+	this.generatePos=()=>{
+		p1=Math.floor((Math.random()*980)+0);
+		p1-=p1%20;
+		p2=Math.floor((Math.random()*480)+0);
+		p2-=p2%20;
+		ctr.fillStyle='#9CBA7F';
+		ctr.fillRect(p1,p2,20,20);
+	}
+	this.getP1=()=>{
+		return p1;
+	}
+	this.getP2=()=>{
+		return p2;
+	}
+}
+var f=new Food();
+function Snake()
+{
+	var px=100,py=0;
+	var arr=[{a:0,b:0},{a:20,b:0},{a:40,b:0},{a:60,b:0},{a:80,b:0},{a:100,b:0}];
+	var len1=20;
+	var len2=20;
+	for(var i=0;i<arr.length;++i)
+		ctr.fillRect(arr[i].a,arr[i].b,len1,len2);
+	this.moveLeft=()=>{
+		start=1;
+		// ctr.fillStyle='#FFFFFF';
+		// for(var i=0;i<arr.length;++i)
+		// 	ctr.fillRect(arr[i].a,arr[i].b,len1,len2);
+		if(arr[arr.length-1].a==f.getP1()&&arr[arr.length-1].b==f.getP2())
+			f.generatePos();
+		else
+		{
+			ctr.clearRect(arr[0].a,arr[0].b,len1,len2);
+			arr.shift();
+		}
+		px+=20;
+		if(px==1000)
+			px=0;
+		if(arr.some(q=>q.a==px&&q.b==py))
+		{
+			location.reload();
+		}
+		arr.push({a:px,b:py});
+		ctr.fillStyle='#FF0000';
+		//for(var i=0;i<arr.length;++i)
+			//ctr.fillRect(arr[i].a,arr[i].b,len1,len2);
+		ctr.fillRect(px,py,len1,len2);
+	}
+	this.moveDownward=()=>{
+		start=2;
+		// ctr.fillStyle='#FFFFFF';
+		// for(var i=0;i<arr.length;++i)
+		// 	ctr.fillRect(arr[i].a,arr[i].b,len1,len2);
+		if(arr[arr.length-1].a==f.getP1()&&arr[arr.length-1].b==f.getP2())
+			f.generatePos();
+		else
+		{
+			ctr.clearRect(arr[0].a,arr[0].b,len1,len2);
+			arr.shift();
+		}
+		py+=20;
+		if(py==500)
+			py=0;
+		if(arr.some(q=>q.a==px&&q.b==py))
+		{
+			location.reload();
+		}
+		arr.push({a:px,b:py});
+		ctr.fillStyle='#FF0000';
+		// for(var i=0;i<arr.length;++i)
+		// 	ctr.fillRect(arr[i].a,arr[i].b,len1,len2);
+		ctr.fillRect(px,py,len1,len2);	
+	}
+	this.moveRight=()=>{
+		start=3;
+		// ctr.fillStyle='#FFFFFF';
+		// for(var i=0;i<arr.length;++i)
+		// 	ctr.fillRect(arr[i].a,arr[i].b,len1,len2);
+		if(arr[arr.length-1].a==f.getP1()&&arr[arr.length-1].b==f.getP2())
+			f.generatePos();
+		else
+		{
+			ctr.clearRect(arr[0].a,arr[0].b,len1,len2);
+			arr.shift();
+		}
+		px-=20;
+		if(px<0)
+			px=980;
+		if(arr.some(q=>q.a==px&&q.b==py))
+		{
+			location.reload();
+		}
+		arr.push({a:px,b:py});
+		ctr.fillStyle='#FF0000';
+		// for(var i=0;i<arr.length;++i)
+		// 	ctr.fillRect(arr[i].a,arr[i].b,len1,len2);
+		ctr.fillRect(px,py,len1,len2);	
+	}
+	this.moveUpward=()=>{
+		start=4;
+		// ctr.fillStyle='#FFFFFF';
+		// for(var i=0;i<arr.length;++i)
+		// 	ctr.fillRect(arr[i].a,arr[i].b,len1,len2);
+		if(arr[arr.length-1].a==f.getP1()&&arr[arr.length-1].b==f.getP2())
+			f.generatePos();
+		else
+		{
+			ctr.clearRect(arr[0].a,arr[0].b,len1,len2);
+			arr.shift();
+		}
+		py-=20;
+		if(py<0)
+			py=480;
+		if(arr.some(q=>q.a==px&&q.b==py))
+		{
+			location.reload();
+		}
+		arr.push({a:px,b:py});
+		ctr.fillStyle='#FF0000';
+		// for(var i=0;i<arr.length;++i)
+		// 	ctr.fillRect(arr[i].a,arr[i].b,len1,len2);
+		ctr.fillRect(px,py,len1,len2);	
+	}
+}
+var s=new Snake();
+function game()
+{
+	f.generatePos();
+	x=setInterval(s.moveLeft,100);
+}
+document.onkeydown=(e)=>{
+   	switch(e.keyCode) 
+   	{
+   		case 27:
+   			if(x)
+   			{
+   				clearInterval(x);
+   				x=false;
+   			}
+   			else
+   			{
+   				if(start==1)
+   					x=setInterval(s.moveLeft,100);
+   				else if(start==2)
+   					x=setInterval(s.moveDownward,100);
+   				else if(start==3)
+   					x=setInterval(s.moveRight,100);
+   				else if(start==4)
+   					x=setInterval(s.moveUpward,100);
+   			}
+   			break;
+        case 37:
+        	if(start!=1)
+        	{
+        		clearInterval(x);
+            	x=setInterval(s.moveRight,100);
+            }
+            break;
+        case 38:
+        	if(start!=2)
+        	{
+            	clearInterval(x);
+            	x=setInterval(s.moveUpward,100);
+            }
+            break;
+        case 39:
+        	if(start!=3)
+        	{
+            	clearInterval(x);
+            	x=setInterval(s.moveLeft,100);
+            }
+            break;
+        case 40:
+        	if(start!=4)
+        	{
+            	clearInterval(x);
+            	x=setInterval(s.moveDownward,100);
+            }
+            break;
+    }
+}
+</script>
+</html>
